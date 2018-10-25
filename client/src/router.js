@@ -14,10 +14,10 @@ export default new Router({
       component: Home,
       children: [
         {
-          path: '/details/:id',
+          path: '/details',
           name: 'details',
           component: () => import('./components/VideoDetail.vue'),
-          props: true
+          props: (route) => ({ query: route.query.q })
         }
       ]
     },
@@ -25,6 +25,11 @@ export default new Router({
       path: '/about',
       name: 'about',
       component: () => import('./views/About.vue')
+    },
+    {
+      path: '/like',
+      name: 'like',
+      component: () => import('./views/Like.vue')
     }
   ]
 })

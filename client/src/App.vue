@@ -21,7 +21,7 @@
               </router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/about" class="nav-link">
+              <router-link to="/like" class="nav-link">
                 Liked Videos <span class="badge badge-info">13</span>
               </router-link>
             </li>
@@ -37,7 +37,7 @@
         </div>
       </div>
     </nav>
-    <router-view/>
+    <router-view :isLogin="isLogin"></router-view>
   </div>
 </template>
 

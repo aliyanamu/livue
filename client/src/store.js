@@ -6,54 +6,71 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    videos: [],
-    video: {},
-    like: ''
+    like: '',
+    likes: []
   },
   mutations: {
-    setVideos (state, payload) {
-      state.videos = payload
+    setLikes (state, payload) {
+      state.likes = payload
     },
-    seVideoById (state, payload) {
-      state.video = payload
+    setOneLike (state, payload) {
+      state.like = payload
     },
-    setLike (state, payload) {
+    setLikeObj (state, payload) {
       state.like = payload
     }
   },
   actions: {
-    getVideoById (context, id) {
-      // axios
-      //   .get(`https://redoverflow-server.hanabc.xyz/questions/${id}`)
-      //   .then(response => {
-      //     context.commit('setQuestionById', response.data.question)
-      //   })
-      //   .catch(err => {
-      //     console.log('get error', err.response)
-      //   })
+    getLike(context) {
+      axios({
+        url: `http://localhost:3000/videos/list`
+      })
+        .then(response => {
+          context.commit('setLikes', response.data.videos)
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
     },
-    getAllVid (context, input) {
-      if (input) {
-        axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyAlWPAuxxBWFumEkr5tK9Syh0Wv2DQPTKM&part=snippet&maxResults=20&q=${input}`)
-        // fetch('https://www.googleapis.com/youtube/v3/search?key=AIzaSyAlWPAuxxBWFumEkr5tK9Syh0Wv2DQPTKM&part=snippet&maxResults=20&q=surfing')
-          // .then(response => response.json())
-          .then(response => {
-            console.log('get list', response.data.items)
-            context.commit('setVideos', response.data.items)
-          })
-          .catch(err => {
-            console.log('get error', err.response)
-          })
-      } else {
-        axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyAlWPAuxxBWFumEkr5tK9Syh0Wv2DQPTKM&part=snippet&maxResults=20&q=walker`)
-          .then(response => {
-            console.log('get list', response.data.items)
-            context.commit('setVideos', response.data.items)
-          })
-          .catch(err => {
-            console.log('get error', err.response)
-          })
-      }
+    likeVid (context, data) {
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/videos/like/${data.title}`,
+        headers: {
+          token: localStorage.getItem('token')
+        },
+        data: {
+          title: data.title,
+          image: data.image,
+          desc: data.desc,
+        }
+      })
+        .then(response => {
+          context.commit('setOneLike', response.data.like)
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
+    },
+    unlikeVid (context, data) {
+      axios({
+        method: 'POST',
+        url: `http://localhost:3000/videos/unlike/${data.title}`,
+        headers: {
+          token: localStorage.getItem('token')
+        },
+        data: {
+          title: data.title,
+          image: data.image,
+          desc: data.desc,
+        }
+      })
+        .then(response => {
+          context.commit('setOneLike', response.data.unlike)
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
     }
   }
 })

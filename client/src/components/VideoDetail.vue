@@ -4,31 +4,44 @@
       <div class="card mb-2" style="width: 100%;">
         <div class="card-body">
           <h5 class="card-title">YouTube Player goes here</h5>
-          <p class="card-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-            sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse
-            cillum dolore eu fugiat nulla pariatur. Excepteur sint
-            occaecat cupidatat non proident, sunt in culpa qui officia
-            deserunt mollit anim id est laborum
-          </p>
+          <img style="width: 80%" class="mr-3" :src="data.image" alt="Video">
         </div>
       </div>
-      <strong>Video Title</strong>&nbsp;
-      <button class="btn btn-sm btn-primary">Like this Video!</button><br />
+      <strong>{{data.title}}</strong>&nbsp;
+      <button class="btn btn-sm btn-primary" v-if="isLogin" @click="likeVid(data)">Like this Video!</button><br />
       <br />
-      <pre class="card">Video description goes here, you can add
-newline too!</pre>
+      <pre class="card">{{data.desc}}</pre>
       <br />
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'video-detail',
+  props: ['isLogin'],
+  data () {
+    return {
+      data: this.$router.history.current.query
+    }
+  },
+  methods: {
+    ...mapActions([
+      'likeVid',
+      'unlikeVid'
+    ])
+  },
+  computed: {
+    ...mapState([
+      'likes',
+      'like'
+    ])
+  },
+  created () {
+    console.log(this.$router.history.current.query)
+  }
 }
 </script>

@@ -26,12 +26,13 @@
     <ul class="list-unstyled">
       <li class="media my-4 ui segment" style="width: 100%" v-for="(video, index) in videos" :key="index">
         <img style="float: left" class="mr-3" :src="video.snippet.thumbnails.default.url" alt="Thumbnail">
+        <router-link :to="{path: '/details', query: {image: video.snippet.thumbnails.high.url, tinyimage: video.snippet.thumbnails.default.url, title: video.snippet.title, desc: video.snippet.description }}">
         <div class="media-body">
           <h5 class="mt-0 mb-1"> {{video.snippet.title}} </h5>
           {{video.snippet.description}}
-          <br />
+          <br/>
         </div>
-        <!-- <router-link :to='{name:"details", params: {id: `${video.id.channelId}`}}>Details</router-link> -->
+        </router-link>
       </li>
     </ul>
   </div>
@@ -39,38 +40,41 @@
 
 <script>
 import axios from 'axios'
-import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'home-list',
   data () {
     return {
-      search: ''
+      search: '',
+      videos: []
     }
   },
   methods: {
-    ...mapActions([
-      'getAllVid',
-      'getVideoById'
-    ]),
+    getAllVid (input) {
+      if (input) {
+        axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyAlWPAuxxBWFumEkr5tK9Syh0Wv2DQPTKM&part=snippet&maxResults=20&q=${input}`)
+          .then(response => {
+            this.videos = response.data.items
+          })
+          .catch(err => {
+            console.log('get error', err.response)
+          })
+      } else {
+        axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyAlWPAuxxBWFumEkr5tK9Syh0Wv2DQPTKM&part=snippet&maxResults=20&q=walker`)
+          .then(response => {
+            this.videos = response.data.items
+          })
+          .catch(err => {
+            console.log('get error', err.response)
+          })
+      }
+    },
     getSearch () {
       this.getAllVid(this.search)
     }
   },
-  computed: {
-    ...mapState([
-      'videos',
-      'video',
-      'like'
-    ])
-  },
   created() {
     this.getAllVid()
-  },
-  watch: {
-    // getSearch () {
-    //   this.getAllVid(this.search)
-    // }
   }
 }
 </script>
@@ -88,6 +92,12 @@ li {
   margin: 0 10px;
 }
 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
   color: #42b983;
+  text-decoration: none;
 }
 </style>

@@ -5,12 +5,12 @@
       <div class="row">
         <div class="col-xl-7">
           <div class="mt-4">
-            <HomeList />
+            <home-list></home-list>
           </div>
         </div>
         <div class="col-xl-5">
           <!-- Player and Detail -->
-          <video-detail></video-detail>
+          <router-view :key="$route.fullPath" :isLogin="isLogin"></router-view>
         </div>
       </div>
     </div>
@@ -19,13 +19,12 @@
 
 <script>
 import HomeList from '@/components/HomeList.vue'
-import VideoDetail from '@/components/VideoDetail.vue'
 
 export default {
   name: 'home',
+  props: ['isLogin'],
   components: {
-    HomeList,
-    VideoDetail
+    HomeList
   }
 }
 </script>

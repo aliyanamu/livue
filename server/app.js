@@ -6,7 +6,8 @@ const createError = require('http-errors'),
      app = express()
 
 const indexRouter = require('./routes/index'),
-     usersRouter = require('./routes/users')
+     usersRouter = require('./routes/users'),
+     videosRouter = require('./routes/videos')
 
 const mongoose   = require('mongoose'),
      urltest = `mongodb://localhost:27017/livue`,
@@ -34,6 +35,7 @@ app
 app
   .use('/', indexRouter)
   .use('/users', usersRouter)
+  .use('/videos', videosRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
